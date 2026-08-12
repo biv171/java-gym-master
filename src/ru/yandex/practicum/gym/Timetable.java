@@ -14,14 +14,13 @@ public class Timetable {
 
         if (timetable.containsKey(dayOfWeek)) {
             timetable.get(dayOfWeek).put(timeOfDay, List.of(trainingSession));
-        } else {
+        } else
             timetable.put(dayOfWeek, new TreeMap<>() {
                 {
                     put(timeOfDay, List.of(trainingSession));
                 }
             }
             );
-        }
     }
 
     public TreeMap<TimeOfDay,List<TrainingSession>> getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
@@ -39,7 +38,7 @@ public class Timetable {
             return trainingSession.get(timeOfDay);
         } else {
             System.out.println("Тренировок на это время нет!");
-            return new ArrayList<TrainingSession>();
+            return new ArrayList<>();
         }
     }
 
