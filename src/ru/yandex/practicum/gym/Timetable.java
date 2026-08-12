@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Timetable {
 
-    private HashMap<DayOfWeek, TreeMap<TimeOfDay, List<TrainingSession>>> timetable = new HashMap<>();
+    private final HashMap<DayOfWeek, TreeMap<TimeOfDay, List<TrainingSession>>> timetable = new HashMap<>();
 
     public void addNewTrainingSession(TrainingSession trainingSession) {
         //сохраняем занятие в расписании
@@ -16,10 +16,10 @@ public class Timetable {
             timetable.get(dayOfWeek).put(timeOfDay, List.of(trainingSession));
         } else
             timetable.put(dayOfWeek, new TreeMap<>() {
-                {
-                    put(timeOfDay, List.of(trainingSession));
-                }
-            }
+                        {
+                            put(timeOfDay, List.of(trainingSession));
+                        }
+                    }
             );
     }
 
