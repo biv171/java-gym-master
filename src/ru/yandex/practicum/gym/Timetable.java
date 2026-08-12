@@ -15,7 +15,12 @@ public class Timetable {
         if (timetable.containsKey(dayOfWeek)) {
             timetable.get(dayOfWeek).put(timeOfDay, List.of(trainingSession));
         } else {
-            timetable.put(dayOfWeek, new TreeMap<>() {{ put(timeOfDay, List.of(trainingSession)); }});
+            timetable.put(dayOfWeek, new TreeMap<>() {
+                {
+                    put(timeOfDay, List.of(trainingSession));
+                }
+            }
+            );
         }
     }
 
@@ -38,7 +43,7 @@ public class Timetable {
         }
     }
 
-    //Cколько занятий в неделю ведёт каждый из тренеров
+    //Метод считает занятий в неделю ведёт каждый из тренеров
     public Map<Coach, Integer> getCountByCoaches() {
         Map<Coach, Integer> coachTrainings = new HashMap<>();
 
