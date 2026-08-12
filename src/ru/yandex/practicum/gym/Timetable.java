@@ -11,16 +11,14 @@ public class Timetable {
         //сохраняем занятие в расписании
         DayOfWeek dayOfWeek = trainingSession.getDayOfWeek();
         TimeOfDay timeOfDay = trainingSession.getTimeOfDay();
+        TreeMap<TimeOfDay, List<TrainingSession>> newTreeMap = new TreeMap<>();
 
         if (timetable.containsKey(dayOfWeek)) {
             timetable.get(dayOfWeek).put(timeOfDay, List.of(trainingSession));
-        } else
-            timetable.put(dayOfWeek, new TreeMap<>() {
-                        {
-                            put(timeOfDay, List.of(trainingSession));
-                        }
-                    }
-            );
+        } else {
+            newTreeMap.put(timeOfDay, List.of(trainingSession));
+            timetable.put(dayOfWeek, newTreeMap);
+        }
     }
 
     public TreeMap<TimeOfDay,List<TrainingSession>> getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
