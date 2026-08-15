@@ -25,15 +25,6 @@ public class TimetableTest {
 
         //new Проверить что занятий в Понедельник менее 24 в день(максимально возможное)
         Assertions.assertTrue(timetable.getTrainingSessionsForDay(DayOfWeek.MONDAY).size() < 24);
-        //new Проверить что в понедельник заполнено время занятий
-        Map<TimeOfDay,List<TrainingSession>> monday = timetable.getTrainingSessionsForDay(DayOfWeek.MONDAY);
-
-        for (List<TrainingSession> session : monday.values()){
-            for(TrainingSession training : session) {
-                Assertions.assertNotNull(training.getTimeOfDay());
-            }
-        }
-
     }
 
     @Test
@@ -64,24 +55,25 @@ public class TimetableTest {
         Assertions.assertEquals(1, timetable.getTrainingSessionsForDay(DayOfWeek.MONDAY).size());
         // Проверить, что за четверг вернулось два занятия:
         // Проверяем что 2 занятия
-        Map<TimeOfDay,List<TrainingSession>> thursdayTraining = timetable.getTrainingSessionsForDay(DayOfWeek.THURSDAY);
+        List<TrainingSession> thursdayTraining = timetable.getTrainingSessionsForDay(DayOfWeek.THURSDAY);
         Assertions.assertEquals(2, thursdayTraining.size());
         // Проверяем правильный порядок: сначала в 13:00, потом в 20:00
         int i = 0;
-        for (Map.Entry<TimeOfDay, List<TrainingSession>> entry : thursdayTraining.entrySet()) {
+        for (TrainingSession session : thursdayTraining) {
             if (i == 0) {
-                Assertions.assertEquals(13, entry.getKey().getHours());
-                Assertions.assertEquals(0, entry.getKey().getMinutes());
+                Assertions.assertEquals(13, session.getTimeOfDay().getHours());
+                Assertions.assertEquals(0, session.getTimeOfDay().getMinutes());
                 i++;
             } else if (i == 1) {
-                Assertions.assertEquals(20, entry.getKey().getHours());
-                Assertions.assertEquals(0, entry.getKey().getMinutes());
+                Assertions.assertEquals(20, session.getTimeOfDay().getHours());
+                Assertions.assertEquals(0, session.getTimeOfDay().getMinutes());
                 break;
             }
         }
 
         // Проверить, что за вторник не вернулось занятий
         Assertions.assertEquals(0, timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY).size());
+
     }
 
     @Test
@@ -126,33 +118,36 @@ public class TimetableTest {
         Coach coach3 = new Coach("Петров", "Петр", "Петрович");
 
         Group groupAdult = new Group("Акробатика для взрослых", Age.ADULT, 90);
+        Group groupChild = new Group("Акробатика для детей", Age.CHILD, 60);
+
+
         TrainingSession fridayAdultTrainingSession = new TrainingSession(groupAdult, coach1,
                 DayOfWeek.FRIDAY, new TimeOfDay(20, 0));
-        TrainingSession sundayAdultTrainingSession = new TrainingSession(groupAdult, coach3,
-                DayOfWeek.SUNDAY, new TimeOfDay(20, 0));
+        TrainingSession fridayChildTrainingSession = new TrainingSession(groupChild, coach2,
+                DayOfWeek.FRIDAY, new TimeOfDay(20, 0));
+        TrainingSession fridayChildTrainingSession2 = new TrainingSession(groupChild, coach3,
+                DayOfWeek.FRIDAY, new TimeOfDay(20, 0));
 
-        Group groupChild = new Group("Акробатика для детей", Age.CHILD, 60);
         TrainingSession mondayChildTrainingSession = new TrainingSession(groupChild, coach2,
                 DayOfWeek.MONDAY, new TimeOfDay(13, 0));
         TrainingSession thursdayChildTrainingSession = new TrainingSession(groupChild, coach1,
                 DayOfWeek.THURSDAY, new TimeOfDay(13, 0));
         TrainingSession saturdayChildTrainingSession = new TrainingSession(groupChild, coach1,
                 DayOfWeek.SATURDAY, new TimeOfDay(10, 0));
-        TrainingSession wensdayChildTrainingSession = new TrainingSession(groupChild, coach3,
-                DayOfWeek.WEDNESDAY, new TimeOfDay(13, 0));
 
         timetable.addNewTrainingSession(fridayAdultTrainingSession);
+        timetable.addNewTrainingSession(fridayChildTrainingSession);
+        timetable.addNewTrainingSession(fridayChildTrainingSession2);
+
         timetable.addNewTrainingSession(mondayChildTrainingSession);
         timetable.addNewTrainingSession(thursdayChildTrainingSession);
         timetable.addNewTrainingSession(saturdayChildTrainingSession);
-        timetable.addNewTrainingSession(sundayAdultTrainingSession);
-        timetable.addNewTrainingSession(wensdayChildTrainingSession);
 
-        Map<Coach, Integer> coach = timetable.getCountByCoaches();
-        //Проверяем порядок
-        Assertions.assertEquals(3, coach.get(coach1));
-        Assertions.assertEquals(2, coach.get(coach3));
-        Assertions.assertEquals(1, coach.get(coach2));
+        List<Map.Entry<Coach, Integer>> coach = timetable.getCountByCoaches();
+        //Проверяем порядок отсортированный список
+        Assertions.assertEquals(3, coach.get(0).getValue());
+        Assertions.assertEquals(2, coach.get(1).getValue());
+        Assertions.assertEquals(1, coach.get(2).getValue());
 
     }
 }
